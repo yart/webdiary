@@ -1,10 +1,5 @@
 require 'rubygems'
 Gem.clear_paths
 
-require 'sinatra'
-
-get '/' do
-  'Hello'
-end
-
+require_relative 'diary'
 run Sinatra::Application
