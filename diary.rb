@@ -2,11 +2,15 @@
 
 require 'sinatra'
 
+# settings
+
 set :haml, :format => :html5
 set :views, 'app/views'
 
+# routes
+
 get '/' do
-  @records = linkify Dir.children('records').sort
+  @records = linkify Dir.children('records').sort { |a, b| b <=> a }
   haml :index, layout: :'layouts/layout'
 end
 
@@ -15,24 +19,14 @@ get '/record/?' do
 end
 
 get '/record/:record' do |record|
-  @datetime = textify record
-  @record   = clearify File.read('records/' + record + '.md')
+  @date   = textify(record, :date)
+  @record = Dir["records/#{record}*"].map { |file| timeify(clearify(File.read(file)), textify(file, :time)) } .reverse.join("\n")
   haml :record, layout: false
 end
 
+# stuff
+
 helpers do
-  def linkify(list)
-    list.map do |el|
-      text = textify(el)
-      "%a{href: '/record/#{el.gsub(%r{\.md}, '')}'} #{text}"
-    end
-  end
-  
-  def textify(number)
-    number.gsub(%r{(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})(?<hour>\d{2})(?<minute>\d{2})(\.md)?}, '\k<year>-\k<month>-\k<day> \k<hour>:\k<minute>')
-  end
-  
-  def clearify(text)
-    text.gsub(%r{^(.+-//-\n\n)(.+)}m, '\2')
-  end
+  helpers_dir = 'app/helpers/'
+  Dir.children(helpers_dir).each { |file| load(helpers_dir + file) }
 end

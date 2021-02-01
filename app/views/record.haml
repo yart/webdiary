@@ -1,9 +1,9 @@
 !!! 5
 %html
   %head
-  %title= "Дневник | Запись от #{@datetime}"
+  %title= "Дневник | Запись от #{@date}"
   %body
-    %h1= @datetime
+    %h1= @date
 
     :markdown
       #{@record}
