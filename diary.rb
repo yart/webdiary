@@ -16,7 +16,7 @@ end
 
 get '/record/:record' do |record|
   @datetime = textify record
-  @record = clearify File.read('records/' + record + '.md')
+  @record   = clearify File.read('records/' + record + '.md')
   haml :record, layout: false
 end
 
