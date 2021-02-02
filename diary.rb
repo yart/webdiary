@@ -20,7 +20,7 @@ end
 
 get '/record/:record' do |record|
   @date   = textify(record, :date)
-  @record = Dir["records/#{record}*"].map { |file| timeify(clearify(File.read(file)), textify(file, :time)) } .reverse.join("\n")
+  @record = Dir["records/#{record}*"].sort.map { |file| timeify(clearify(File.read(file)), textify(file, :time)) } .join("\n")
   haml :record, layout: false
 end
 
